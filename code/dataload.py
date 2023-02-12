@@ -6,7 +6,7 @@ def get_zeros_and_ones(df, HG, AG):
       if (int(data[HG]) > 0 and int(data[AG]) > 0):
         df.at[i, 'A&H Scored?'] = 1
       else:
-        df.at[i, 'A&H Scored?'] = None
+        df.at[i, 'A&H Scored?'] = 0
     except:
-        df.at[i, 'A&H Scored?'] = None
+        df.at[i, 'A&H Scored?'] = 0
   return df
