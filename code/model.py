@@ -1,9 +1,10 @@
+import numpy as np
 import statistics as stats
 from helper_functions import days_between
 
 #can only be used if pandas is already imported in the file calling the function
 
-def obtenir_arrays(df, equipe, depart, HTheader, ATheader, DateHeader):
+""" def obtenir_arrays(df, equipe, depart, HTheader, ATheader, DateHeader):
   df_rev = df.reindex(index=df.index[::-1])
   df_rev = df_rev.iloc[depart:, 0:]
   numbers = [7, 10, 15, 23, 41]
@@ -32,10 +33,41 @@ def obtenir_arrays(df, equipe, depart, HTheader, ATheader, DateHeader):
   for i in range(5):
     while (len(groups[i]) < numbers[i]):
       groups[i].append(0)
+  return groups """
+
+def obtenir_arrays(df, equipe, depart, HTheader, ATheader, DateHeader):
+  df_rev = df.reindex(index=df.index[::-1])
+  df_rev = df_rev.iloc[depart:, 0:]
+  numbers = [7, 10, 15, 23, 41]
+  groups = np.empty(5, dtype=object)
+  groups[0] = np.zeros([7])
+  groups[1] = np.zeros([10])
+  groups[2] = np.zeros([15])
+  groups[3] = np.zeros([23])
+  groups[4] = np.zeros([41])
+  matchs = 0
+  for i, data in df_rev.iterrows():
+    if (data[HTheader] == equipe or data[ATheader] == equipe):
+      if (matchs == 0):
+        dateMatch1 = data[DateHeader]
+      x = days_between(dateMatch1, data[DateHeader])
+      if x is not None:
+        if x > 600:
+          return groups
+      if data['A&H Scored?'] is not None:
+        if data['A&H Scored?'] == 1:
+          for i in range(5):
+            try:
+              groups[i][matchs] = 1
+            except:
+              pass
+      matchs += 1
+      if (matchs > numbers[len(numbers) - 1]):
+        return groups
   return groups
 
 
-def obtenir_arrays_cote(df, equipe, depart, coteHeader, dateHeader):
+""" def obtenir_arrays_cote(df, equipe, depart, coteHeader, dateHeader):
   df_rev = df.reindex(index=df.index[::-1])
   df_rev = df_rev.iloc[depart:, 0:]
   numbers = [5, 8, 13, 21]
@@ -64,6 +96,36 @@ def obtenir_arrays_cote(df, equipe, depart, coteHeader, dateHeader):
   for i in range(4):
     while (len(groups[i]) < numbers[i]):
       groups[i].append(0)
+  return groups """
+
+def obtenir_arrays_cote(df, equipe, depart, coteHeader, dateHeader):
+  df_rev = df.reindex(index=df.index[::-1])
+  df_rev = df_rev.iloc[depart:, 0:]
+  numbers = [5, 8, 13, 21]
+  groups = np.empty(4, dtype=object)
+  groups[0] = np.zeros([5])
+  groups[1] = np.zeros([8])
+  groups[2] = np.zeros([13])
+  groups[3] = np.zeros([21])
+  matchs = 0
+  for i, data in df_rev.iterrows():
+    if (data[coteHeader] == equipe):
+      if (matchs == 0):
+        dateMatch1 = data[dateHeader]
+      x = days_between(dateMatch1, data[dateHeader])
+      if x is not None:
+        if x > 600:
+          return groups
+      if data['A&H Scored?'] is not None:
+        if data['A&H Scored?'] == 1:
+          for i in range(4):
+            try:
+              groups[i][matchs] = 1
+            except:
+              pass
+      matchs += 1
+      if (matchs > numbers[len(numbers) - 1]):
+        return groups
   return groups
 
 
@@ -76,17 +138,6 @@ def obtenir_note(array):
     return stats.mean(notes)
   else:
     return None
-
-
-#obtenir la note d'un match (sans prendre en compte le côté)
-def note_match_beta(dtf, equipeA, equipeB, depart, HTheader, ATheader, DateHeader):
-  arrayA = obtenir_arrays(dtf, equipeA, depart, HTheader, ATheader, DateHeader)
-  arrayB = obtenir_arrays(dtf, equipeB, depart, HTheader, ATheader, DateHeader)
-  if arrayA is not None and arrayB is not None:
-    noteA = obtenir_note(arrayA)
-    noteB = obtenir_note(arrayB)
-    return (noteA + noteB) / 2
-  return -1
 
 
 #obtenir la note d'une équipe
