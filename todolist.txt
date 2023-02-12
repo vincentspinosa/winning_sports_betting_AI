@@ -1,0 +1,20 @@
+1 - Vectoriser 
+
+2 - Version 3 : diminuer la loss
+
+Pistes pour vectoriser :
+
+Pour loader la data : 
+
+    df[FTHG] = int(df[FTHG])
+    df[FTAG] = int(df[FTAG])
+    df[A&H] = operation vectorielle
+
+Piste pour minimiser la loss :
+
+    Les 0 sont remplacés par une valeur négative égale à la note du match
+
+        Ça impacterait plus les matchs ayant une note élevée
+
+    Trouver une hard limit : si x paris sur y échoués pour une équipe, ne pas parier
+                            si note de risque trop élevée, ne pas parier
