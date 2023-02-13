@@ -6,6 +6,7 @@ Pistes pour vectoriser :
 
 Pour loader la data : 
 
+    dropna
     df[FTHG] = int(df[FTHG])
     df[FTAG] = int(df[FTAG])
     df[A&H] = operation vectorielle
