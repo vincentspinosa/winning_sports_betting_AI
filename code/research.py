@@ -12,9 +12,8 @@ def data_sous_resultat(dt, dateHeader, arrayPrecis, arrayDatesPourc, dataSousRes
   l = 0
   m = 0
   for i in arrayPrecis:
-    if i is not None:
-      if i == 1:
-        l += 1
+    if i == 1:
+      l += 1
     m += 1
   sousPourc = int((l / m) * 10000) / 100
   arrayDatesPourc.append([dt[dateHeader], sousPourc])
@@ -25,6 +24,13 @@ def data_sous_resultat(dt, dateHeader, arrayPrecis, arrayDatesPourc, dataSousRes
     None
 
 
+def creer_array_paris(df, note):
+  arrayParis = []
+  for i, data in df.iterrows():
+    nb = data['Note Match Beta'] * 100
+    if (nb >= note):
+      arrayParis.append(df.iloc[i])
+  return arrayParis
 
 #pour une note :
 #récupérer les % de réussites, total de la bankroll, matchs réussis / matchs perdus pour une équipe
@@ -36,14 +42,7 @@ def data_note(df, dateHeader, maxLenArrayPrecis, note, pourcentage, cote):
   n = note / 100
   print(f"Note : {n}")
   print(f"{pourcentage}% à chaque pari")
-  #l'array pour stocker les résultats
-  arrays_Xpercent = []
-  #on récupère les résultats
-  for i, data in df.iterrows():
-    nb = data['Note Match Beta'] * 100
-    #si la note du match (déja dans la df) est >= à la note passée en param, on ajoute le résultat du match à l'array
-    if (nb >= note):
-      arrays_Xpercent.append(df.iloc[i])
+  arrayParis = creer_array_paris(df, note)
   x = 0
   y = 0
   bankroll = 100
@@ -51,11 +50,11 @@ def data_note(df, dateHeader, maxLenArrayPrecis, note, pourcentage, cote):
   arrayDatesPourc = []
   dataSousResultats = []
   #on parcoure les résultats
-  for dt in arrays_Xpercent:
+  for dt in arrayParis:
     pari = (bankroll / 100) * pourcentage
     bankroll -= pari
     #si le pari est réussi, on multiplie le % de la BK parié par la côte moyenne
-    if (dt['A&H Scored?'] == 1):
+    if dt['A&H Scored?'] == 1:
       x += 1
       bankroll += pari * cote
     arrayPrecis.append(dt['A&H Scored?'])
@@ -89,9 +88,9 @@ def data_note(df, dateHeader, maxLenArrayPrecis, note, pourcentage, cote):
 def get_data(df, dateHeader, maxLenArrayPrecis, noteDepart, noteFin, cote, increment, pourcentageBKdepart, pourcentageBKfin, incrementPourc):
   arrayResultats = []
   x = noteDepart
-  while(x < noteFin):
+  while x < noteFin:
     i = pourcentageBKdepart
-    while (i < pourcentageBKfin):
+    while i < pourcentageBKfin:
       array = data_note(df, dateHeader, maxLenArrayPrecis, x, i, cote)
       arrayResultats.append(array)
       i += incrementPourc

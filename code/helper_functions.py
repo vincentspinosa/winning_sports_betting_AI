@@ -13,7 +13,7 @@ def projections(bk, matchs, etapes, mul):
     if i % etapes == 0 and i > 0:
       bk *= mul
       j += 1
-      array.append(i, j, bk)
+      array.append([i, j, bk])
       print(f"Étape {j}, Match {i}\nBankroll : {int(bk)}")
   return array
 

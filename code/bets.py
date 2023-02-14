@@ -1,4 +1,4 @@
-from model import obtenir_arrays, obtenir_note, obtenir_arrays_cote, note_match
+from model import note_match
 
 #récupérer les équipes d'un championnat
 #a besoin d'un point de départ, du nombre d'équipes à récupérer, du column header des équipes dom et ext
@@ -8,10 +8,8 @@ def get_equipes(df, depart, nbEquipes, HTheader, ATheader):
   df_rev = df_rev.iloc[depart:, 0:]
   for i, data in df_rev.iterrows():
     if data[HTheader] not in array:
-      #print(data[HTheader])
       array.append(data[HTheader])
     if data[ATheader] not in array:
-      #print(data[ATheader])
       array.append(data[ATheader])
     if len(array) == nbEquipes:
       return array

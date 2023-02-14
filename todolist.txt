@@ -1,15 +1,42 @@
-1 - Vectoriser 
+- Rapidité :
 
-2 - Version 3 : diminuer la loss
+    - Exporter notes en csv pour ne pas recalculer à chaque fois
 
-Pistes pour vectoriser :
+        - Export automatique à la fin de la fonction de calcul
+            - Réécriture / remplacement du fichier si il existe déjà
 
-Pour loader la data : 
+        - Condition qui détermine si on doit calculer ou loader un fichier
+            - Variable dans Jupyter, argv dans fichier classique
 
-    dropna
-    df[FTHG] = int(df[FTHG])
-    df[FTAG] = int(df[FTAG])
-    df[A&H] = operation vectorielle
+    - Compiler avec PyPy
+
+
+- Cleaner code :
+
+    - Model.py :
+
+        1 fonction de calcul principale
+
+        1 sous fonction pour les arrays généraux
+
+        1 sous-fonction pour les arrays dom/ext
+
+    - Fonctions dans bons fichiers (à déterminer)
+
+    - Enlever les imports inutiles
+
+
+- Modulabilité :
+
+    - Passer le code en OO
+
+
+----------------------------------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+VERSION 3 : DIMINUER LA LOSS
+
 
 Piste pour minimiser la loss :
 
