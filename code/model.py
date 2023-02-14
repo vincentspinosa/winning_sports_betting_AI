@@ -8,12 +8,9 @@ def obtenir_arrays(df, equipe, depart, HTheader, ATheader, DateHeader):
   df_rev = df.reindex(index=df.index[::-1])
   df_rev = df_rev.iloc[depart:, 0:]
   numbers = [7, 10, 15, 23, 41]
-  groups = np.empty(5, dtype=object)
-  groups[0] = np.zeros([7])
-  groups[1] = np.zeros([10])
-  groups[2] = np.zeros([15])
-  groups[3] = np.zeros([23])
-  groups[4] = np.zeros([41])
+  groups = np.empty(len(numbers), dtype=object)
+  for i in range(len(numbers)):
+    groups[i] = np.zeros([numbers[i]])
   matchs = 0
   for i, data in df_rev.iterrows():
     if (data[HTheader] == equipe or data[ATheader] == equipe):
@@ -24,7 +21,7 @@ def obtenir_arrays(df, equipe, depart, HTheader, ATheader, DateHeader):
         if x > 600:
           break
       if data['A&H Scored?'] == 1:
-        for i in range(5):
+        for i in range(len(numbers)):
           if matchs < len(groups[i]):
             groups[i][matchs] = 1
       matchs += 1
@@ -38,10 +35,8 @@ def obtenir_arrays_cote(df, equipe, depart, coteHeader, dateHeader):
   df_rev = df_rev.iloc[depart:, 0:]
   numbers = [5, 8, 13, 21]
   groups = np.empty(4, dtype=object)
-  groups[0] = np.zeros([5])
-  groups[1] = np.zeros([8])
-  groups[2] = np.zeros([13])
-  groups[3] = np.zeros([21])
+  for i in range(len(numbers)):
+      groups[i] = np.zeros([numbers[i]])
   matchs = 0
   for i, data in df_rev.iterrows():
     if (data[coteHeader] == equipe):
@@ -52,7 +47,7 @@ def obtenir_arrays_cote(df, equipe, depart, coteHeader, dateHeader):
         if x > 600:
           break
       if data['A&H Scored?'] == 1:
-        for i in range(4):
+        for i in range(len(numbers)):
           if matchs < len(groups[i]):
             groups[i][matchs] = 1
       matchs += 1
