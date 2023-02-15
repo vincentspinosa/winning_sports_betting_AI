@@ -33,7 +33,7 @@ def set_ones(data, dtHeader, array, numbers, matchs):
 
 #can only be used if pandas is already imported in the file calling the function
 
-def obtenir_arrays(df, numbersArray, equipe, depart, HTheader, ATheader, DateHeader):
+def obtenir_arrays(df, numbersArray, equipe, depart, HTheader, ATheader, PariHeader, DateHeader):
   df_rev = rev_and_place(df, depart)
   groups = np.empty(len(numbersArray), dtype=object)
   for i in range(len(numbersArray)):
@@ -45,14 +45,14 @@ def obtenir_arrays(df, numbersArray, equipe, depart, HTheader, ATheader, DateHea
         dateMatch1 = data[DateHeader]
       if date_valide(dateMatch1, data[DateHeader], 600) == False:
         break
-      groups = set_ones(data, 'HA_Scored', groups, numbersArray, matchs)
+      groups = set_ones(data, PariHeader, groups, numbersArray, matchs)
       matchs += 1
       if (matchs > numbersArray[len(numbersArray) - 1]):
         break
   return groups
 
 
-def obtenir_arrays_cote(df, numbersArray, equipe, depart, coteHeader, dateHeader):
+def obtenir_arrays_cote(df, numbersArray, equipe, depart, coteHeader, PariHeader, dateHeader):
   df_rev = rev_and_place(df, depart)
   groups = np.empty(len(numbersArray), dtype=object)
   for i in range(len(numbersArray)):
@@ -64,7 +64,7 @@ def obtenir_arrays_cote(df, numbersArray, equipe, depart, coteHeader, dateHeader
         dateMatch1 = data[dateHeader]
       if date_valide(dateMatch1, data[dateHeader], 600) == False:
         break
-      groups = set_ones(data, 'HA_Scored', groups, numbersArray, matchs)
+      groups = set_ones(data, PariHeader, groups, numbersArray, matchs)
       matchs += 1
       if (matchs > numbersArray[len(numbersArray) - 1]):
         break
@@ -82,10 +82,10 @@ def obtenir_note(array):
 
 
 #obtenir la note d'une équipe
-def note_equipe(dtf, equipe, depart, coteHeader, HTheader, ATheader, DateHeader):
-  array = obtenir_arrays(dtf, [7, 10, 15, 23, 41], equipe, depart, HTheader, ATheader, DateHeader)
+def note_equipe(dtf, equipe, depart, coteHeader, HTheader, ATheader, PariHeader, DateHeader):
+  array = obtenir_arrays(dtf, [7, 10, 15, 23, 41], equipe, depart, HTheader, ATheader, PariHeader, DateHeader)
   if array is not None:
-    arrayCote = obtenir_arrays_cote(dtf, [5, 8, 13, 21], equipe, depart, coteHeader, DateHeader)
+    arrayCote = obtenir_arrays_cote(dtf, [5, 8, 13, 21], equipe, depart, coteHeader, PariHeader, DateHeader)
     if arrayCote is not None:
       try:
         note = obtenir_note(array)
@@ -96,19 +96,19 @@ def note_equipe(dtf, equipe, depart, coteHeader, HTheader, ATheader, DateHeader)
 
 
 #obtenir la note d'un match
-def note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, DateHeader):
-  noteA = note_equipe(dtf, equipeA, depart, HTheader, HTheader, ATheader, DateHeader)
-  noteB = note_equipe(dtf, equipeB, depart, ATheader, HTheader, ATheader, DateHeader)
+def note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, PariHeader, DateHeader):
+  noteA = note_equipe(dtf, equipeA, depart, HTheader, HTheader, ATheader, PariHeader, DateHeader)
+  noteB = note_equipe(dtf, equipeB, depart, ATheader, HTheader, ATheader, PariHeader, DateHeader)
   if noteA is not None and noteB is not None:
     return (noteA + noteB) / 2
   return -1
 
 
 #récupérer les notes pour chaque match du dataframe passé en paramètre
-def get_notes(df, HTheader, ATheader, DateHeader, NoteMatchHeader, moduloAffichage):
+def get_notes(df, HTheader, ATheader, DateHeader, NoteHeader, PariHeader, moduloAffichage):
   for i, data in df.iterrows():
-    note = note_match(df, data[HTheader], data[ATheader], df.shape[0] - 1 - i, HTheader, ATheader, DateHeader)
-    df.at[i, NoteMatchHeader] = note
+    note = note_match(df, data[HTheader], data[ATheader], df.shape[0] - 1 - i, HTheader, ATheader, PariHeader, DateHeader)
+    df.at[i, NoteHeader] = note
     if i % moduloAffichage == 0:
       print(f"{i} - {note}")
   print("\n")

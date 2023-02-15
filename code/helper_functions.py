@@ -15,8 +15,8 @@ def get_equipes(df, depart, nbEquipes, HTheader, ATheader):
       return array
 
 #afficher et récupérer la note d'un match
-def afficher_note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, DateHeader):
-  note = note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, DateHeader)
+def afficher_note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, PariHeader, DateHeader):
+  note = note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, PariHeader, DateHeader)
   print(f"Match : {equipeA} - {equipeB}")
   print(f"Note : {note}\n")
   return [equipeA, equipeB, note]
