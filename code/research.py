@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 
-
 #Fonctions exécutables seulement si pandas est déjà importé par le fichier appelant les fonctions
 
 #Récupérer la data des sous-resultats
@@ -21,13 +20,14 @@ def data_sous_resultat(dt, dateHeader, arrayPrecis, arrayDatesPourc, dataSousRes
   try:
     print(f"Sous-résultat : {l}/{m}, {sousPourc}% de réussite")
   except:
-    None
+    pass
+
 
 
 def creer_array_paris(df, note):
   arrayParis = []
   for i, data in df.iterrows():
-    nb = data['Note Match Beta'] * 100
+    nb = data['Note_Match_Beta'] * 100
     if (nb >= note):
       arrayParis.append(df.iloc[i])
   return arrayParis
@@ -54,10 +54,10 @@ def data_note(df, dateHeader, maxLenArrayPrecis, note, pourcentage, cote):
     pari = (bankroll / 100) * pourcentage
     bankroll -= pari
     #si le pari est réussi, on multiplie le % de la BK parié par la côte moyenne
-    if dt['A&H Scored?'] == 1:
+    if dt['HA_Scored'] == 1:
       x += 1
       bankroll += pari * cote
-    arrayPrecis.append(dt['A&H Scored?'])
+    arrayPrecis.append(dt['HA_Scored'])
     if len(arrayPrecis) == maxLenArrayPrecis:
       data_sous_resultat(dt, dateHeader, arrayPrecis, arrayDatesPourc, dataSousResultats)
       arrayPrecis = []

@@ -1,4 +1,40 @@
-from datetime import datetime
+from model import note_match
+
+#récupérer les équipes d'un championnat
+#a besoin d'un point de départ, du nombre d'équipes à récupérer, du column header des équipes dom et ext
+def get_equipes(df, depart, nbEquipes, HTheader, ATheader):
+  array = []
+  df_rev = df.reindex(index=df.index[::-1])
+  df_rev = df_rev.iloc[depart:, 0:]
+  for i, data in df_rev.iterrows():
+    if data[HTheader] not in array:
+      array.append(data[HTheader])
+    if data[ATheader] not in array:
+      array.append(data[ATheader])
+    if len(array) == nbEquipes:
+      return array
+
+#afficher et récupérer la note d'un match
+def afficher_note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, DateHeader):
+  note = note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, DateHeader)
+  print(f"Match : {equipeA} - {equipeB}")
+  print(f"Note : {note}\n")
+  return [equipeA, equipeB, note]
+
+#impriner un array d'équipes
+def print_array_equipes(array):
+  for i in range(len(array)):
+    print(f"{i} - {array[i]}")
+
+#imprimer un array de notes de matchs
+def print_array_notes(array):
+  for i in range(len(array)):
+    print(f"{i} - {array[i][0]} - {array[i][1]}")
+  print("\n")
+
+#calculer la somme d'un pari
+def calcul_somme(bankroll, pourcentage):
+  return bankroll * pourcentage
 
 #faire des projections de la bankroll selon un multiplicateur
 #a besoin de :
@@ -16,26 +52,6 @@ def projections(bk, matchs, etapes, mul):
       array.append([i, j, bk])
       print(f"Étape {j}, Match {i}\nBankroll : {int(bk)}")
   return array
-
-#calculer le nombre de jours d'écart entre deux dates
-def days_between(d1, d2):
-  try:
-    d1 = datetime.strptime(d1, "%d/%m/%y")
-    d2 = datetime.strptime(d2, "%d/%m/%y")
-    return abs((d2 - d1).days)
-  except:
-    return None
-
-#imprimer un array de notes de matchs
-def print_array_notes(array):
-  for i in range(len(array)):
-    print(f"{i} - {array[i][0]} - {array[i][1]}")
-  print("\n")
-
-#impriner un array d'équipes
-def print_array_equipes(array):
-  for i in range(len(array)):
-    print(f"{i} - {array[i]}")
 
 #calculer la cote nécessaire pour être au seuil de rentabilité
 def break_even(pourcDepart, pourcFin, increment):

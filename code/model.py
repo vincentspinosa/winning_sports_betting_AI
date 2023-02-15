@@ -1,57 +1,72 @@
 import numpy as np
 import statistics as stats
-from helper_functions import days_between
+from datetime import datetime
+
+def days_between(d1, d2):
+  try:
+    d1 = datetime.strptime(d1, "%d/%m/%y")
+    d2 = datetime.strptime(d2, "%d/%m/%y")
+    return abs((d2 - d1).days)
+  except:
+    return None
+
+def rev_and_place(df, depart):
+  df = df.reindex(index=df.index[::-1])
+  df = df.iloc[depart:, 0:]
+  return df
+
+def date_valide(v1, v2, ecartMax):
+  x = days_between(v1, v2)
+  if x is not None:
+    if x > ecartMax:
+      return False
+  return True
+
+def set_ones(data, dtHeader, array, numbers, matchs):
+  if data[dtHeader] == 1:
+    for i in range(len(numbers)):
+      if matchs < len(array[i]):
+        array[i][matchs] = 1
+  return array
+  
+
 
 #can only be used if pandas is already imported in the file calling the function
 
-def obtenir_arrays(df, equipe, depart, HTheader, ATheader, DateHeader):
-  df_rev = df.reindex(index=df.index[::-1])
-  df_rev = df_rev.iloc[depart:, 0:]
-  numbers = [7, 10, 15, 23, 41]
-  groups = np.empty(len(numbers), dtype=object)
-  for i in range(len(numbers)):
-    groups[i] = np.zeros([numbers[i]])
+def obtenir_arrays(df, numbersArray, equipe, depart, HTheader, ATheader, DateHeader):
+  df_rev = rev_and_place(df, depart)
+  groups = np.empty(len(numbersArray), dtype=object)
+  for i in range(len(numbersArray)):
+    groups[i] = np.zeros([numbersArray[i]])
   matchs = 0
   for i, data in df_rev.iterrows():
-    if (data[HTheader] == equipe or data[ATheader] == equipe):
-      if (matchs == 0):
+    if data[HTheader] == equipe or data[ATheader] == equipe:
+      if matchs == 0:
         dateMatch1 = data[DateHeader]
-      x = days_between(dateMatch1, data[DateHeader])
-      if x is not None:
-        if x > 600:
-          break
-      if data['A&H Scored?'] == 1:
-        for i in range(len(numbers)):
-          if matchs < len(groups[i]):
-            groups[i][matchs] = 1
+      if date_valide(dateMatch1, data[DateHeader], 600) == False:
+        break
+      groups = set_ones(data, 'HA_Scored', groups, numbersArray, matchs)
       matchs += 1
-      if (matchs > numbers[len(numbers) - 1]):
+      if (matchs > numbersArray[len(numbersArray) - 1]):
         break
   return groups
 
 
-def obtenir_arrays_cote(df, equipe, depart, coteHeader, dateHeader):
-  df_rev = df.reindex(index=df.index[::-1])
-  df_rev = df_rev.iloc[depart:, 0:]
-  numbers = [5, 8, 13, 21]
-  groups = np.empty(4, dtype=object)
-  for i in range(len(numbers)):
-      groups[i] = np.zeros([numbers[i]])
+def obtenir_arrays_cote(df, numbersArray, equipe, depart, coteHeader, dateHeader):
+  df_rev = rev_and_place(df, depart)
+  groups = np.empty(len(numbersArray), dtype=object)
+  for i in range(len(numbersArray)):
+      groups[i] = np.zeros([numbersArray[i]])
   matchs = 0
   for i, data in df_rev.iterrows():
-    if (data[coteHeader] == equipe):
-      if (matchs == 0):
+    if data[coteHeader] == equipe:
+      if matchs == 0:
         dateMatch1 = data[dateHeader]
-      x = days_between(dateMatch1, data[dateHeader])
-      if x is not None:
-        if x > 600:
-          break
-      if data['A&H Scored?'] == 1:
-        for i in range(len(numbers)):
-          if matchs < len(groups[i]):
-            groups[i][matchs] = 1
+      if date_valide(dateMatch1, data[dateHeader], 600) == False:
+        break
+      groups = set_ones(data, 'HA_Scored', groups, numbersArray, matchs)
       matchs += 1
-      if (matchs > numbers[len(numbers) - 1]):
+      if (matchs > numbersArray[len(numbersArray) - 1]):
         break
   return groups
 
@@ -68,9 +83,9 @@ def obtenir_note(array):
 
 #obtenir la note d'une équipe
 def note_equipe(dtf, equipe, depart, coteHeader, HTheader, ATheader, DateHeader):
-  array = obtenir_arrays(dtf, equipe, depart, HTheader, ATheader, DateHeader)
+  array = obtenir_arrays(dtf, [7, 10, 15, 23, 41], equipe, depart, HTheader, ATheader, DateHeader)
   if array is not None:
-    arrayCote = obtenir_arrays_cote(dtf, equipe, depart, coteHeader, DateHeader)
+    arrayCote = obtenir_arrays_cote(dtf, [5, 8, 13, 21], equipe, depart, coteHeader, DateHeader)
     if arrayCote is not None:
       try:
         note = obtenir_note(array)
