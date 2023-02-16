@@ -22,13 +22,20 @@ def date_valide(v1, v2, ecartMax):
       return False
   return True
 
-def set_ones(data, dtHeader, array, numbers, matchs):
-  if data[dtHeader] == 1:
+def set_ones(data, HASheader, array, numbers, matchs):
+  if data[HASheader] == 1:
     for i in range(len(numbers)):
       if matchs < len(array[i]):
         array[i][matchs] = 1
   return array
-  
+
+def set_minus(data, HASheader, noteHeader, array, numbers, matchs):
+  if data[HASheader] == 0:
+    for i in range(len(numbers)):
+      if matchs < len(array[i]):
+        array[i][matchs] = noteHeader * -1
+  return array
+    
 
 
 #can only be used if pandas is already imported in the file calling the function

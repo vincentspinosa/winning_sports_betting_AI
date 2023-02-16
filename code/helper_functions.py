@@ -27,10 +27,10 @@ def print_array_equipes(array):
     print(f"{i} - {array[i]}")
 
 #imprimer un array de notes de matchs
-def print_array_notes(array):
+""" def print_array_notes(array):
   for i in range(len(array)):
     print(f"{i} - {array[i][0]} - {array[i][1]}")
-  print("\n")
+  print("\n") """
 
 #calculer la somme d'un pari
 def calcul_somme(bankroll, pourcentage):
