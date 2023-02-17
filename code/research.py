@@ -91,14 +91,10 @@ def data_note(df, pariHeader, dateHeader, noteHeader, maxLenArrayPrecis, note, p
 #incrementPourc : l'incrément à utiliser pour les % de la BK à parier
 def get_data(df, pariHeader, dateHeader, noteHeader, maxLenArrayPrecis, noteDepart, noteFin, cote, increment, pourcentageBKdepart, pourcentageBKfin, incrementPourc):
   arrayResultats = []
-  x = noteDepart
-  while x < noteFin:
-    i = pourcentageBKdepart
-    while i < pourcentageBKfin:
+  for x in range(noteDepart, noteFin, increment):
+    for i in range(pourcentageBKdepart, pourcentageBKfin, incrementPourc):
       array = data_note(df, pariHeader, dateHeader, noteHeader, maxLenArrayPrecis, x, i, cote)
       arrayResultats.append(array)
-      i += incrementPourc
-    x += increment
   return arrayResultats
 
 #get 2D plots for a strategy result

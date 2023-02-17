@@ -1,6 +1,8 @@
 Rapidité :
 
-- Zéro 'while'
+- Zéro 'while' :
+
+    Utiliser numpy.arange ou
 
 - Compiler avec PyPy
 

@@ -56,11 +56,9 @@ def projections(bk, matchs, etapes, mul):
 #calculer la cote nécessaire pour être au seuil de rentabilité
 def break_even(pourcDepart, pourcFin, increment):
   array = []
-  i = pourcDepart
-  while i < pourcFin:
+  for i in range(pourcDepart, pourcFin, increment):
     print(f"Pourcentage de victoires : {i}")
     print(f"Cote nécessaire : {100 / i}")
     print("\n")
     array.append([i, 100 / i])
-    i += increment
   return array
