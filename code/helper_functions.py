@@ -15,11 +15,15 @@ def get_equipes(df, depart, nbEquipes, HTheader, ATheader):
       return array
 
 #afficher et récupérer la note d'un match
-def afficher_note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, PariHeader, DateHeader):
-  note = note_match(dtf, equipeA, equipeB, depart, HTheader, ATheader, PariHeader, DateHeader)
+def afficher_note_match(df, equipeA, equipeB, depart, HTheader, ATheader, PariHeader, DateHeader):
+  note = note_match(df, equipeA, equipeB, depart, HTheader, ATheader, PariHeader, DateHeader)
   print(f"Match : {equipeA} - {equipeB}")
   print(f"Note : {note}\n")
   return [equipeA, equipeB, note]
+
+def add_match(df, date, equipeA, equipeB):
+  df.loc[len(df.index)] = [date, equipeA, equipeB, 0, 0, 0]
+
 
 #impriner un array d'équipes
 def print_array_equipes(array):

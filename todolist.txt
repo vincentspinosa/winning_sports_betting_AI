@@ -1,9 +1,3 @@
-Rapidité :
-
-- Zéro 'while' :
-
-    Utiliser numpy.arange ou
-
 - Compiler avec PyPy
 
 ----------------------------------------------------
@@ -12,12 +6,43 @@ Rapidité :
 
 VERSION 3 : DIMINUER LA LOSS
 
+Note de risque = 
+    x = obtenir_note(obtenir_arrays(set_minus))
+    y = 1 + obtenir_note(obtenir_arrays_cote(set_minus))
+    note = x * y
 
-Piste pour minimiser la loss :
+Trouver une hard limit : si note de risque trop élevée, ne pas parier
 
-    Les 0 sont remplacés par une valeur négative égale à la note du match
+    Soit :
+        - Nombre réél
+        - % note du match
 
-        Ça impacterait plus les matchs ayant une note élevée
+Si écart dernier match > x jours, ne pas parier.
 
-    Trouver une hard limit : si x paris sur y échoués pour une équipe, ne pas parier
-                            si note de risque trop élevée, ne pas parier
+Si - x matchs joués sur duree_temps, ne pas parier.
+
+Si journée_championnat < y, ne pas parier (revient à x matchs / duree_tps)
+
+----------------------------------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+VERSION 4 : GLOBALIZATION
+
+Pour chaque ligue :
+    Trouver note optimale
+    Trouver note de risque optimale 
+
+Pour l'ensemble :
+    Trouver stratégie pour les paris qui se chevauchent
+
+
+----------------------------------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+VERSION 5 : AUTOMATIZATION
+
+Récupérer la data automatiquement
+Récupérer matchs à venir automatiquement 
+Trouver paris à placer & les ajouter au calendrier automatiquement 
