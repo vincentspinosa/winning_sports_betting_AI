@@ -6,22 +6,13 @@
 
 VERSION 3 : DIMINUER LA LOSS
 
-Note de risque = 
-    x = obtenir_note(obtenir_arrays(set_minus))
-    y = 1 + obtenir_note(obtenir_arrays_cote(set_minus))
-    note = x * y
+Calculer les coefs de manière brute.
 
-Trouver une hard limit : si note de risque trop élevée, ne pas parier
-
-    Soit :
-        - Nombre réél
-        - % note du match
+Classe Vector ?
 
 Si écart dernier match > x jours, ne pas parier.
 
 Si - x matchs joués sur duree_temps, ne pas parier.
-
-Si journée_championnat < y, ne pas parier (revient à x matchs / duree_tps)
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -46,3 +37,13 @@ VERSION 5 : AUTOMATIZATION
 Récupérer la data automatiquement
 Récupérer matchs à venir automatiquement 
 Trouver paris à placer & les ajouter au calendrier automatiquement 
+
+
+POUR FAIRE UNE LIBRAIRIE :
+
+Possibilité de choisir l'activation function :
+    - relu 
+    - leaky relu 
+    - sigmoid
+    - sigmoid proportionelle
+    - ...

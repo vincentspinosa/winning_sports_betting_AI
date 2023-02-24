@@ -107,8 +107,11 @@ def get_plots(data, lenMatchGroups):
         array.append(i[1][j][1])
     except:
       pass
-    print(f"Note : {i[0][0]}")
-    plt.plot(array)
-    plt.ylabel(f"% réussite")
-    plt.xlabel(f"Groupes de {lenMatchGroups} paris")
-    plt.show()
+    try:
+      print(f"Note : {i[0][0]}")
+      plt.plot(array)
+      plt.ylabel(f"% réussite")
+      plt.xlabel(f"Groupes de {lenMatchGroups} paris")
+      plt.show()
+    except:
+      pass
