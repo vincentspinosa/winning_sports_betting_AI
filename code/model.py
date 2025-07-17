@@ -3,9 +3,6 @@ import statistics as stats
 from datetime import datetime
 
 
-def sig(x):
-  return 1.0 / (1.0 + np.exp(-x))
-
 def days_between(d1, d2):
   try:
     d1 = datetime.strptime(d1, "%d/%m/%y")
@@ -30,7 +27,7 @@ def set_plus(data, HASheader, array, numbers, matchs):
   if data[HASheader] == 1:
     for i in range(len(numbers)):
       if matchs < len(array[i]):
-          array[i][matchs] = sig(data['Total_Goals'])
+          array[i][matchs] = 1
   return array
 
 def set_minus(data, HASheader, array, numbers, matchs):
@@ -43,11 +40,11 @@ def set_minus(data, HASheader, array, numbers, matchs):
 
 #can only be used if pandas is already imported in the file calling the function
 
-def layer(df, numbersArray, equipe, depart, Headers, PariHeader, dateHeader, function):
+def layer(df, vector, equipe, depart, Headers, PariHeader, dateHeader, function):
   df_rev = rev_and_place(df, depart)
-  groups = np.empty(len(numbersArray), dtype=object)
-  for i in range(len(numbersArray)):
-    groups[i] = np.zeros([numbersArray[i]])
+  array = np.empty(len(vector), dtype=object)
+  for i in range(len(vector)):
+    array[i] = np.zeros([vector[i]])
   matchs = 0
   for i, data in df_rev.iterrows():
     equipeIn = False
@@ -59,13 +56,13 @@ def layer(df, numbersArray, equipe, depart, Headers, PariHeader, dateHeader, fun
         dateMatch1 = data[dateHeader]
         matchs += 1
         continue
-      if date_valide(dateMatch1, data[dateHeader], 600) == False:
+      if date_valide(dateMatch1, data[dateHeader], 365) == False:
         break
-      groups = function(data, PariHeader, groups, numbersArray, matchs)
+      array = function(data, PariHeader, array, vector, matchs)
       matchs += 1
-      if (matchs > numbersArray[len(numbersArray) - 1]):
+      if (matchs > vector[len(vector) - 1]):
         break
-  return groups
+  return array
 
 
 #obtenir la note à partir de l'array retourné par layer()
@@ -80,10 +77,10 @@ def obtenir_note(array):
 
 #obtenir la note d'une équipe
 def note_equipe(df, equipe, depart, Headers, PariHeader, DateHeader, function):
-  #array = layer(df, [5, 7, 9, 15, 23, 41], equipe, depart, Headers, PariHeader, DateHeader, function)
-  array = layer(df, [5, 8, 13], equipe, depart, Headers, PariHeader, DateHeader, function)
+  
+  vector = [1, 2, 3, 5]
+  array = layer(df, vector, equipe, depart, Headers, PariHeader, DateHeader, function)
   try:
-    #return sig(obtenir_note(array))
     return obtenir_note(array)
   except:
     return 0
@@ -91,12 +88,13 @@ def note_equipe(df, equipe, depart, Headers, PariHeader, DateHeader, function):
 
 #obtenir la note d'un match
 def note_match(df, equipeA, equipeB, depart, HTheader, ATheader, PariHeader, DateHeader, function):
-  noteEqAFull = note_equipe(df, equipeA, depart, [HTheader, ATheader], PariHeader, DateHeader, function)
-  noteEqBFull = note_equipe(df, equipeB, depart, [HTheader, ATheader], PariHeader, DateHeader, function)
+  #noteEqAFull = note_equipe(df, equipeA, depart, [HTheader, ATheader], PariHeader, DateHeader, function)
+  #noteEqBFull = note_equipe(df, equipeB, depart, [HTheader, ATheader], PariHeader, DateHeader, function)
   noteEqA = note_equipe(df, equipeA, depart, [HTheader], PariHeader, DateHeader, function)
   noteEqB = note_equipe(df, equipeB, depart, [ATheader], PariHeader, DateHeader, function)
   try:
-    return (noteEqAFull + noteEqBFull + (noteEqA * 2) + (noteEqB * 2)) / 6
+    return (noteEqA + noteEqB) / 2
+    #return (noteEqAFull + noteEqBFull + noteEqA + noteEqB) / 4
   except:
     return 0
 
@@ -106,8 +104,8 @@ def get_notes(df, HTheader, ATheader, DateHeader, NoteHeader, PariHeader, modulo
   for i, data in df.iterrows():
     note = note_match(df, data[HTheader], data[ATheader], df.shape[0] - 1 - i, HTheader, ATheader, PariHeader, DateHeader, set_plus)
     df.at[i, NoteHeader] = note
-    note -= note_match(df, data[HTheader], data[ATheader], df.shape[0] - 1 - i, HTheader, ATheader, PariHeader, DateHeader, set_minus)
-    df.at[i, NoteHeader] = note
+    #note -= note_match(df, data[HTheader], data[ATheader], df.shape[0] - 1 - i, HTheader, ATheader, PariHeader, DateHeader, set_minus)
+    #df.at[i, NoteHeader] = note
     if i % moduloAffichage == 0:
       print(f"{i} - {note}")
   print("\n")
